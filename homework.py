@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict, List, Union
+from typing import Dict, List, Type, Union
 
 
 @dataclass
@@ -40,7 +40,7 @@ class Training:
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
-        return (self.get_distance() / self.duration)
+        return self.get_distance() / self.duration
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
@@ -84,7 +84,7 @@ class SportsWalking(Training):
         first_exp = self.get_mean_speed()**2 // self.height
         second_exp = self.COEFF_CAL_1 * self.weight
         third_exp = first_exp * self.COEFF_CAL_2 * self.weight
-        return ((second_exp + third_exp) * self.duration * self.MIN_IN_H)
+        return (second_exp + third_exp) * self.duration * self.MIN_IN_H
 
 
 class Swimming(Training):
@@ -116,9 +116,9 @@ class Swimming(Training):
 def read_package(workout_type: str,
                  data: List[Union[int, float]]) -> Training:
     """Прочитать данные полученные от датчиков."""
-    training_list: Dict[str, Training] = {'SWM': Swimming,
-                                          'RUN': Running,
-                                          'WLK': SportsWalking}
+    training_list: Dict[str, Type[Training]] = {'SWM': Swimming,
+                                                'RUN': Running,
+                                                'WLK': SportsWalking}
     return training_list[workout_type](*data)
 
 
